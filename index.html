@@ -235,7 +235,8 @@ function showScreen(id){
 }
 
 function setRole(r, el){
-  document.querySelectorAll('#s-login .tab-bar .tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-user').classList.remove('active');
+  document.getElementById('tab-admin-login').classList.remove('active');
   el.classList.add('active');
   document.getElementById('user-login-form').style.display  = r==='user'  ? 'block':'none';
   document.getElementById('admin-login-form').style.display = r==='admin' ? 'block':'none';
