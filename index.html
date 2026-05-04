@@ -6,12 +6,12 @@
 <title>HIRO BRAZILIAN JIUJITSU SENDAGI　回数券</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html{height:100%;overflow-x:hidden;max-width:100%}
-body{min-height:100%;background:#f5f5f3;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;color:#1a1a1a;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:70px}
+html{height:100%;overflow-x:hidden}
+body{min-height:100%;background:#f5f5f3;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:15px;color:#1a1a1a;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:70px}
 @media(min-width:768px){body{padding-bottom:170px}}
-.wrap{max-width:100%;width:100%;margin:0 auto;padding:2rem 1rem 1rem;overflow-x:hidden;box-sizing:border-box;}
+.wrap{width:100%;margin:0 auto;padding:2rem 1rem 1rem}
 .logo-block{text-align:center;margin-bottom:2rem}
-.logo-main{font-size:17px;font-weight:500;letter-spacing:0.06em;color:#1a1a1a}
+.logo-main{font-size:17px;font-weight:500;letter-spacing:0.06em}
 .logo-divider{width:28px;height:1px;background:#bbb;margin:8px auto}
 .logo-sub{font-size:10px;letter-spacing:0.18em;color:#888;text-transform:uppercase}
 .screen{display:none}
@@ -55,11 +55,11 @@ input:focus,select:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,1
 .show-deleted-row{text-align:center;margin-bottom:12px}
 .show-deleted-btn{font-size:12px;color:#aaa;background:none;border:none;cursor:pointer;text-decoration:underline}
 .member-hint{font-size:12px;color:#1D9E75;margin:-8px 0 10px;min-height:18px}
-.ad-bar{position:fixed;bottom:0;left:0;right:0;width:100%;height:60px;background:#fff;border-top:0.5px solid #e0e0e0;cursor:pointer;overflow:hidden;z-index:999;}
-@media(min-width:768px){.ad-bar{height:160px;}}
-.ad-bar a{display:block;width:100%;height:100%;text-decoration:none}
-.ad-bar img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;}
-.ad-dots{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:1000;pointer-events:none}
+.ad-bar{position:fixed;bottom:0;left:0;right:0;width:100%;height:60px;background:#fff;border-top:0.5px solid #e0e0e0;overflow:hidden;z-index:999}
+@media(min-width:768px){.ad-bar{height:160px}}
+.ad-bar img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block;cursor:pointer}
+.ad-dots{position:fixed;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:1000;pointer-events:none}
+@media(min-width:768px){.ad-dots{bottom:10px}}
 .ad-dot{width:5px;height:5px;border-radius:50%;background:rgba(0,0,0,0.2)}
 .ad-dot.active{background:#1D9E75}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -77,8 +77,8 @@ input:focus,select:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,1
   </div>
   <div class="card">
     <div class="tab-bar">
-      <button class="tab active" onclick="setRole('user',this)">利用者</button>
-      <button class="tab" onclick="setRole('admin',this)">管理者</button>
+      <button class="tab active" id="tab-user" onclick="setRole('user',this)">利用者</button>
+      <button class="tab" id="tab-admin-login" onclick="setRole('admin',this)">管理者</button>
     </div>
     <div id="user-login-form">
       <label>会員番号</label>
@@ -88,7 +88,7 @@ input:focus,select:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,1
     </div>
     <div id="admin-login-form" style="display:none">
       <label>管理者パスワード</label>
-      <input type="password" id="admin-pw" placeholder="">
+      <input type="password" id="admin-pw">
       <div style="text-align:right"><button class="btn btn-primary" onclick="loginAdmin()">ログイン</button></div>
       <div id="admin-err" class="err"></div>
     </div>
@@ -140,16 +140,6 @@ input:focus,select:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,1
       <div id="new-err" class="err"></div>
     </div>
   </div>
-  <div id="admin-csv" style="display:none">
-    <div class="card">
-      <p class="sub" style="margin-bottom:12px">全データをCSVファイルとしてダウンロードします。</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="exportCSV(false)">有効な券のみ</button>
-        <button class="btn" onclick="exportCSV(true)">全件（削除済み含む）</button>
-      </div>
-    </div>
-  </div>
-
   <div id="admin-pw" style="display:none">
     <div class="card">
       <label>新しいパスワード</label>
@@ -160,58 +150,56 @@ input:focus,select:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,1
       <div id="pw-msg" style="font-size:13px;margin-top:4px;min-height:18px"></div>
     </div>
   </div>
+  <div id="admin-csv" style="display:none">
+    <div class="card">
+      <p class="sub" style="margin-bottom:12px">全データをCSVファイルとしてダウンロードします。</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="exportCSV(false)">有効な券のみ</button>
+        <button class="btn" onclick="exportCSV(true)">全件（削除済み含む）</button>
+      </div>
+    </div>
+  </div>
 </div>
 </div>
 
-<!-- 広告スクリプト（module外） -->
+<!-- 広告スクリプト -->
 <script>
 const ADS = [
-  { img: 'https://hny-code.github.io/hiro-bjj-pass-fb/bnr-foodpage.jpg',  url: 'https://food-page.com' },
-  { img: 'https://hny-code.github.io/hiro-bjj-pass-fb/bnr-kaitorisatei.jpg', url: 'https://kaitorisatei.jp' },
-  { img: 'https://hny-code.github.io/hiro-bjj-pass-fb/bnr-taiyoko.jpg',   url: 'https://food-page.com/taiyoko-chikudenchi/' }
+  { img: 'https://hny-code.github.io/hiro-bjj-pass-fb/bnr-foodpage.jpg',      url: 'https://food-page.com' },
+  { img: 'https://hny-code.github.io/hiro-bjj-pass-fb/bnr-kaitorisatei.jpg',  url: 'https://kaitorisatei.jp' },
+  { img: 'https://hny-code.github.io/hiro-bjj-pass-fb/bnr-taiyoko.jpg',       url: 'https://food-page.com/taiyoko-chikudenchi/' }
 ];
 let adIndex = 0;
-
 function showAd(i){
   adIndex = i;
   document.getElementById('ad-img').src = ADS[i].img;
   document.querySelectorAll('.ad-dot').forEach((d,j) => d.classList.toggle('active', j===i));
 }
-
 window.addEventListener('load', function(){
-  // ドット生成
   const dots = document.getElementById('ad-dots');
   ADS.forEach((_,i) => {
     const d = document.createElement('div');
-    d.className = 'ad-dot' + (i===0?' active':'');
-    d.id = 'ad-dot-'+i;
+    d.className = 'ad-dot'+(i===0?' active':'');
     dots.appendChild(d);
   });
   showAd(0);
-
-  // クリックで現在の広告のURLを開く
   document.getElementById('ad-img').addEventListener('click', function(){
     window.open(ADS[adIndex].url, '_blank');
   });
-
-  // 10秒ごとに自動切替
-  setInterval(function(){
-    showAd((adIndex+1) % ADS.length);
-  }, 10000);
+  setInterval(function(){ showAd((adIndex+1) % ADS.length); }, 10000);
 });
 </script>
 
 <!-- 広告バナー -->
-<div class="ad-bar" id="ad-bar">
-  <img id="ad-img" src="" alt="広告" style="width:100%;max-width:100%;height:100%;object-fit:cover;object-position:center top;display:block;cursor:pointer;">
+<div class="ad-bar">
+  <img id="ad-img" src="" alt="広告">
 </div>
 <div class="ad-dots" id="ad-dots"></div>
 
 <!-- Firebase SDK -->
-<script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyDW1lDvvNVeZ6I6ICWb4Q0SS9Niq2uIDtg",
   authDomain: "hiro-bjj-sendagi.firebaseapp.com",
@@ -220,48 +208,77 @@ const firebaseConfig = {
   messagingSenderId: "977917246566",
   appId: "1:977917246566:web:097a1790e81015860481a7"
 };
-
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+firebase.initializeApp(firebaseConfig);
+const db  = firebase.firestore();
 const COL = 'tickets';
 
 const ADMIN_PW_KEY  = 'hiro_bjj_admin_pw';
 const ADMIN_SESSION = 'hiro_bjj_fb_admin_session';
 let showDeleted = false;
 
-// =====================
-// 広告
-// =====================
-
-
-// =====================
-// ユーティリティ
-// =====================
 function getAdminPw(){ return localStorage.getItem(ADMIN_PW_KEY) || 'sendagi2026'; }
 function isAdminLoggedIn(){ return localStorage.getItem(ADMIN_SESSION) === 'true'; }
 
-function toJSTString(date){
-  const jst = new Date(date.getTime() + 9*60*60*1000);
-  return jst.toISOString().replace('T',' ').slice(0,16);
+// 起動時セッション復元
+window.addEventListener('load', function(){
+  if(isAdminLoggedIn()){
+    showDeleted = false;
+    adminTab('list');
+    showScreen('s-admin');
+  }
+});
+
+function showScreen(id){
+  ['s-login','s-user','s-admin'].forEach(s => document.getElementById(s).classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
 }
+
+function setRole(r, el){
+  document.querySelectorAll('#s-login .tab-bar .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('user-login-form').style.display  = r==='user'  ? 'block':'none';
+  document.getElementById('admin-login-form').style.display = r==='admin' ? 'block':'none';
+  document.getElementById('login-err').textContent = '';
+  document.getElementById('admin-err').textContent = '';
+}
+
+function goLogin(){
+  showScreen('s-login');
+  document.getElementById('login-id').value  = '';
+  document.getElementById('admin-pw').value  = '';
+  document.getElementById('login-err').textContent = '';
+  document.getElementById('admin-err').textContent = '';
+  // ログインタブを利用者に戻す
+  document.getElementById('user-login-form').style.display  = 'block';
+  document.getElementById('admin-login-form').style.display = 'none';
+  document.getElementById('tab-user').classList.add('active');
+  document.getElementById('tab-admin-login').classList.remove('active');
+}
+
+function logout(){
+  localStorage.removeItem(ADMIN_SESSION);
+  goLogin();
+}
+
+// ユーティリティ
 function dateOnly(str){
   if(!str) return '';
-  const s = String(str).slice(0,10);
-  return s.replace(/-/g, '/');
+  return String(str).slice(0,10).replace(/-/g,'/');
 }
 function dateTime(str){ return str ? String(str).slice(0,16) : ''; }
 function daysLeft(str){
   if(!str) return 0;
   const s = String(str).replace(' ','T');
   const d = new Date(s.includes('+') ? s : s+'+09:00');
-  return Math.ceil((d - new Date())/(1000*60*60*24));
+  return Math.ceil((d-new Date())/(1000*60*60*24));
 }
-function isExpired(str){ return daysLeft(str) <= 0; }
-function isDeleted(t){ return t.deleted === 'deleted'; }
+function isExpired(str){ return daysLeft(str)<=0; }
+function isDeleted(t){ return t.deleted==='deleted'; }
 function statusOf(t){
   if(isDeleted(t)) return 'deleted';
   if(isExpired(t.expiry)) return 'expired';
-  if(Number(t.used) >= Number(t.total)) return 'used';
+  if(Number(t.used)>=Number(t.total)) return 'used';
   return 'active';
 }
 function badgeHTML(st){
@@ -270,96 +287,60 @@ function badgeHTML(st){
   if(st==='deleted') return '<span class="badge badge-deleted">削除済み</span>';
   return '<span class="badge badge-used">使い切り</span>';
 }
-function renderDots(total, used, status){
-  let html = '<div class="dot-row">';
-  for(let i=0; i<Number(total); i++){
-    if(i<Number(used))           html += '<div class="dot used">✓</div>';
-    else if(status==='active')   html += `<div class="dot remaining">${i+1}</div>`;
-    else                         html += `<div class="dot">${i+1}</div>`;
+function renderDots(total,used,status){
+  let html='<div class="dot-row">';
+  for(let i=0;i<Number(total);i++){
+    if(i<Number(used))          html+='<div class="dot used">✓</div>';
+    else if(status==='active')  html+=`<div class="dot remaining">${i+1}</div>`;
+    else                        html+=`<div class="dot">${i+1}</div>`;
   }
   return html+'</div>';
 }
 function loadingHTML(){ return '<div class="loading"><span class="spinner"></span>読み込み中...</div>'; }
 function initials(name){
-  const p = name.trim().split(/\s+/);
+  const p=name.trim().split(/\s+/);
   return p.length>=2 ? p[0][0]+p[1][0] : name.slice(0,2);
 }
 function padMember(id){ return String(id).padStart(4,'0'); }
-
-// =====================
-// 画面制御
-// =====================
-function showScreen(id){
-  ['s-login','s-user','s-admin'].forEach(s => document.getElementById(s).classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  window.scrollTo(0,0);
+function toJSTString(date){
+  const jst=new Date(date.getTime()+9*60*60*1000);
+  return jst.toISOString().replace('T',' ').slice(0,16);
 }
-window.setRole = function(r, el){
-  document.querySelectorAll('#s-login .tab-bar .tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('user-login-form').style.display  = r==='user'  ? 'block':'none';
-  document.getElementById('admin-login-form').style.display = r==='admin' ? 'block':'none';
-  document.getElementById('login-err').textContent = '';
-  document.getElementById('admin-err').textContent = '';
-};
-window.goLogin = function(){
-  showScreen('s-login');
-  document.getElementById('login-id').value = '';
-  document.getElementById('admin-pw').value = '';
-  // タブを利用者に戻す
-  document.getElementById('user-login-form').style.display = 'block';
-  document.getElementById('admin-login-form').style.display = 'none';
-  document.querySelectorAll('#s-login .tab-bar .tab').forEach((t,i) => {
-    t.classList.toggle('active', i===0);
-  });
-  document.getElementById('login-err').textContent = '';
-  document.getElementById('admin-err').textContent = '';
-};
-window.logout = function(){
-  localStorage.removeItem(ADMIN_SESSION);
-  window.goLogin();
-};
 
-// =====================
-// Firestore CRUD
-// =====================
+// Firestore
 async function getTickets(){
-  const q = query(collection(db, COL), orderBy('issued','desc'));
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ docId: d.id, ...d.data() }));
+  const snap = await db.collection(COL).orderBy('issued','desc').get();
+  return snap.docs.map(d=>({docId:d.id,...d.data()}));
 }
-
 async function getNextMember(){
-  const snap = await getDocs(collection(db, COL));
-  let max = 0;
-  snap.docs.forEach(d => {
-    const m = parseInt(d.data().member);
-    if(!isNaN(m) && m > max) max = m;
+  const snap = await db.collection(COL).get();
+  let max=0;
+  snap.docs.forEach(d=>{
+    const m=parseInt(d.data().member);
+    if(!isNaN(m)&&m>max) max=m;
   });
   return String(max+1).padStart(4,'0');
 }
 
-// =====================
 // 利用者ログイン
-// =====================
-window.loginUser = async function(){
-  const id = document.getElementById('login-id').value.trim();
-  if(!id){ document.getElementById('login-err').textContent = '会員番号を入力してください'; return; }
-  const el = document.getElementById('user-cards');
+async function loginUser(){
+  const id=document.getElementById('login-id').value.trim();
+  if(!id){ document.getElementById('login-err').textContent='会員番号を入力してください'; return; }
+  const el=document.getElementById('user-cards');
   showScreen('s-user');
-  el.innerHTML = loadingHTML();
-  document.getElementById('user-member-block').innerHTML = '';
-  try {
-    const all = await getTickets();
-    const paddedId = padMember(id);
-    const tickets = all.filter(t => padMember(t.member)===paddedId && !isDeleted(t));
+  el.innerHTML=loadingHTML();
+  document.getElementById('user-member-block').innerHTML='';
+  try{
+    const all=await getTickets();
+    const paddedId=padMember(id);
+    const tickets=all.filter(t=>padMember(t.member)===paddedId&&!isDeleted(t));
     if(!tickets.length){
       showScreen('s-login');
-      document.getElementById('login-err').textContent = '該当する回数券が見つかりません';
+      document.getElementById('login-err').textContent='該当する回数券が見つかりません';
       return;
     }
-    const name = tickets[0].name;
-    document.getElementById('user-member-block').innerHTML = `
+    const name=tickets[0].name;
+    document.getElementById('user-member-block').innerHTML=`
       <div class="member-block">
         <div class="member-icon">${initials(name)}</div>
         <div>
@@ -368,22 +349,31 @@ window.loginUser = async function(){
         </div>
       </div>`;
     renderUserCards(tickets);
-  } catch(e){
-    el.innerHTML = '<p class="sub">通信エラーが発生しました。再度お試しください。</p>';
+  }catch(e){
+    el.innerHTML='<p class="sub">通信エラーが発生しました。再度お試しください。</p>';
   }
-};
+}
+
+function loginAdmin(){
+  const pw=document.getElementById('admin-pw').value;
+  if(pw!==getAdminPw()){ document.getElementById('admin-err').textContent='パスワードが違います'; return; }
+  localStorage.setItem(ADMIN_SESSION,'true');
+  showDeleted=false;
+  adminTab('list');
+  showScreen('s-admin');
+}
 
 function renderUserCards(tickets){
-  const el = document.getElementById('user-cards');
-  el.innerHTML = tickets.map(t => {
-    const st = statusOf(t);
-    const remain = Number(t.total) - Number(t.used);
-    const dl = daysLeft(t.expiry);
+  const el=document.getElementById('user-cards');
+  el.innerHTML=tickets.map(t=>{
+    const st=statusOf(t);
+    const remain=Number(t.total)-Number(t.used);
+    const dl=daysLeft(t.expiry);
     return `<div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <span style="font-weight:500">${t.total} session pass</span>${badgeHTML(st)}
       </div>
-      ${renderDots(t.total, t.used, st)}
+      ${renderDots(t.total,t.used,st)}
       <div class="sub mt8">残り <strong style="color:#1a1a1a;font-size:16px">${remain}</strong> 回</div>
       <div class="sub">有効期限：${dateOnly(t.expiry)}${st==='active'?` （あと${dl}日）`:''}</div>
       <div class="sub">発行日：${dateOnly(t.issued)}</div>
@@ -391,197 +381,163 @@ function renderUserCards(tickets){
   }).join('');
 }
 
-// =====================
-// 管理者ログイン
-// =====================
-window.loginAdmin = function(){
-  const pw = document.getElementById('admin-pw').value;
-  if(pw !== getAdminPw()){ document.getElementById('admin-err').textContent = 'パスワードが違います'; return; }
-  localStorage.setItem(ADMIN_SESSION, 'true');
-  showDeleted = false;
-  adminTab('list');
-  showScreen('s-admin');
-};
-
-window.adminTab = function(tab){
-  ['list','new','pw','csv'].forEach(t => {
-    document.getElementById('admin-'+t).style.display = t===tab ? 'block':'none';
-    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+function adminTab(tab){
+  ['list','new','pw','csv'].forEach(t=>{
+    document.getElementById('admin-'+t).style.display=t===tab?'block':'none';
+    document.getElementById('tab-'+t).classList.toggle('active',t===tab);
   });
   if(tab==='list') renderAdminList();
   if(tab==='new')  loadNextMember();
-};
+}
 
 async function loadNextMember(){
-  const hint  = document.getElementById('member-hint');
-  const input = document.getElementById('new-member');
-  hint.textContent = '次の会員番号を取得中...';
-  input.value = '';
-  try {
-    const next = await getNextMember();
-    input.value = next;
-    hint.textContent = `次の会員番号：${next}（変更可）`;
-  } catch(e){
-    hint.textContent = '';
-    input.placeholder = '例：0001';
+  const hint=document.getElementById('member-hint');
+  const input=document.getElementById('new-member');
+  hint.textContent='次の会員番号を取得中...';
+  input.value='';
+  try{
+    const next=await getNextMember();
+    input.value=next;
+    hint.textContent=`次の会員番号：${next}（変更可）`;
+  }catch(e){
+    hint.textContent='';
+    input.placeholder='例：0001';
   }
 }
 
 async function renderAdminList(){
-  const el = document.getElementById('admin-list');
-  el.innerHTML = loadingHTML();
-  try {
-    const all = await getTickets();
-    const active  = all.filter(t => !isDeleted(t));
-    const deleted = all.filter(t => isDeleted(t));
-    if(!all.length){ el.innerHTML = '<p class="sub">発行済みの回数券がありません</p>'; return; }
-
-    const visible = showDeleted ? all : active;
-    let html = visible.map(t => {
-      const st = statusOf(t);
-      const remain = Number(t.total) - Number(t.used);
-      const canUse = st==='active' && remain>0;
-      const isDel  = isDeleted(t);
+  const el=document.getElementById('admin-list');
+  el.innerHTML=loadingHTML();
+  try{
+    const all=await getTickets();
+    const active=all.filter(t=>!isDeleted(t));
+    const deleted=all.filter(t=>isDeleted(t));
+    if(!all.length){ el.innerHTML='<p class="sub">発行済みの回数券がありません</p>'; return; }
+    const visible=showDeleted?all:active;
+    let html=visible.map(t=>{
+      const st=statusOf(t);
+      const remain=Number(t.total)-Number(t.used);
+      const canUse=st==='active'&&remain>0;
+      const isDel=isDeleted(t);
       return `<div class="card${isDel?' deleted':''}">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
           <div><span style="font-weight:500">${t.name}</span><span class="sub" style="margin-left:8px">No.${padMember(t.member)}</span></div>
           ${badgeHTML(st)}
         </div>
         <div class="sub">${t.total} session pass　残り <strong style="color:#1a1a1a">${remain}</strong> 回　/ 期限：${dateOnly(t.expiry)}</div>
-        ${renderDots(t.total, t.used, st)}
+        ${renderDots(t.total,t.used,st)}
         ${isDel
-          ? `<div class="deleted-info">削除日時：${dateTime(t.deletedAt)}</div>`
-          : `<div class="btn-row">
-              ${canUse ? `<button class="btn btn-primary btn-sm" onclick="useOne('${t.docId}',${Number(t.used)},${Number(t.total)})">1回 使用済みにする</button>` : ''}
-              ${Number(t.used)>0 ? `<button class="btn btn-sm" onclick="undoOne('${t.docId}',${Number(t.used)})">1回 戻す</button>` : ''}
+          ?`<div class="deleted-info">削除日時：${dateTime(t.deletedAt)}</div>`
+          :`<div class="btn-row">
+              ${canUse?`<button class="btn btn-primary btn-sm" onclick="useOne('${t.docId}',${Number(t.used)},${Number(t.total)})">1回 使用済みにする</button>`:''}
+              ${Number(t.used)>0?`<button class="btn btn-sm" onclick="undoOne('${t.docId}',${Number(t.used)})">1回 戻す</button>`:''}
               <button class="btn btn-danger btn-sm" onclick="deleteTicket('${t.docId}')">削除</button>
             </div>`
         }
       </div>`;
     }).join('');
-
     if(deleted.length>0){
-      html += `<div class="show-deleted-row">
+      html+=`<div class="show-deleted-row">
         <button class="show-deleted-btn" onclick="toggleDeleted()">
-          ${showDeleted ? '削除済みを隠す' : `削除済みを表示する（${deleted.length}件）`}
+          ${showDeleted?'削除済みを隠す':`削除済みを表示する（${deleted.length}件）`}
         </button>
       </div>`;
     }
-    el.innerHTML = html;
-  } catch(e){
-    el.innerHTML = '<p class="sub">通信エラーが発生しました。</p>';
+    el.innerHTML=html;
+  }catch(e){
+    el.innerHTML='<p class="sub">通信エラーが発生しました。</p>';
   }
 }
 
-window.toggleDeleted = function(){ showDeleted = !showDeleted; renderAdminList(); };
+function toggleDeleted(){ showDeleted=!showDeleted; renderAdminList(); }
 
-window.useOne = async function(docId, used, total){
+async function useOne(docId,used,total){
   if(used>=total) return;
-  await updateDoc(doc(db,COL,docId), { used: used+1 });
+  await db.collection(COL).doc(docId).update({used:used+1});
   renderAdminList();
-};
-window.undoOne = async function(docId, used){
+}
+async function undoOne(docId,used){
   if(used<=0) return;
-  await updateDoc(doc(db,COL,docId), { used: used-1 });
+  await db.collection(COL).doc(docId).update({used:used-1});
   renderAdminList();
-};
-window.deleteTicket = async function(docId){
+}
+async function deleteTicket(docId){
   if(!confirm('この回数券を削除しますか？\n削除記録が残ります。')) return;
-  await updateDoc(doc(db,COL,docId), {
-    deleted: 'deleted',
-    deletedAt: toJSTString(new Date())
+  await db.collection(COL).doc(docId).update({
+    deleted:'deleted',
+    deletedAt:toJSTString(new Date())
   });
   renderAdminList();
-};
+}
 
-window.issueTicket = async function(){
-  const member = document.getElementById('new-member').value.trim();
-  const name   = document.getElementById('new-name').value.trim();
-  const total  = parseInt(document.getElementById('new-type').value);
-  const errEl  = document.getElementById('new-err');
-  if(!member||!name){ errEl.textContent = '会員番号とお名前を入力してください'; return; }
-  const now = new Date();
-  const expiry = new Date(now);
-  expiry.setMonth(expiry.getMonth() + (total===5?2:4));
-  errEl.textContent = '発行中...';
-  try {
-    await addDoc(collection(db,COL), {
-      member, name, total, used: 0,
-      issued:  toJSTString(now),
-      expiry:  toJSTString(expiry),
-      deleted: '', deletedAt: ''
+async function issueTicket(){
+  const member=document.getElementById('new-member').value.trim();
+  const name=document.getElementById('new-name').value.trim();
+  const total=parseInt(document.getElementById('new-type').value);
+  const errEl=document.getElementById('new-err');
+  if(!member||!name){ errEl.textContent='会員番号とお名前を入力してください'; return; }
+  const now=new Date();
+  const expiry=new Date(now);
+  expiry.setMonth(expiry.getMonth()+(total===5?2:4));
+  errEl.textContent='発行中...';
+  try{
+    await db.collection(COL).add({
+      member,name,total,used:0,
+      issued:toJSTString(now),
+      expiry:toJSTString(expiry),
+      deleted:'',deletedAt:''
     });
-    document.getElementById('new-member').value = '';
-    document.getElementById('new-name').value   = '';
-    errEl.textContent = '';
+    document.getElementById('new-member').value='';
+    document.getElementById('new-name').value='';
+    errEl.textContent='';
     alert(`発行しました。\n${name} 様\n会員番号：${member}\n${total}回券`);
-    window.adminTab('list');
-  } catch(e){
-    errEl.textContent = '通信エラーが発生しました。';
+    adminTab('list');
+  }catch(e){
+    errEl.textContent='通信エラーが発生しました。';
   }
-};
+}
 
-
-window.exportCSV = async function(includeDeleted){
-  try {
-    const all = await getTickets();
-    const data = includeDeleted ? all : all.filter(t => !isDeleted(t));
+async function exportCSV(includeDeleted){
+  try{
+    const all=await getTickets();
+    const data=includeDeleted?all:all.filter(t=>!isDeleted(t));
     if(!data.length){ alert('データがありません'); return; }
-
-    const headers = ['会員番号','お名前','券種','使用回数','残り回数','発行日','有効期限','削除','削除日時'];
-    const rows = data.map(t => [
-      padMember(t.member),
-      t.name,
-      t.total + '回券',
-      t.used,
-      Number(t.total) - Number(t.used),
-      dateOnly(t.issued),
-      dateOnly(t.expiry),
-      isDeleted(t) ? '削除済み' : '',
-      t.deletedAt ? dateTime(t.deletedAt) : ''
+    const headers=['会員番号','お名前','券種','使用回数','残り回数','発行日','有効期限','削除','削除日時'];
+    const rows=data.map(t=>[
+      padMember(t.member),t.name,t.total+'回券',t.used,
+      Number(t.total)-Number(t.used),
+      dateOnly(t.issued),dateOnly(t.expiry),
+      isDeleted(t)?'削除済み':'',
+      t.deletedAt?dateTime(t.deletedAt):''
     ]);
-
-    const csv = [headers, ...rows]
-      .map(row => row.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(','))
-      .join('\n');
-
-    const bom = '\uFEFF';
-    const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const now = new Date();
-    const filename = 'session-pass-' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '.csv';
-    a.href = url;
-    a.download = filename;
+    const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+    const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    const now=new Date();
+    a.href=url;
+    a.download='session-pass-'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'.csv';
     a.click();
     URL.revokeObjectURL(url);
-  } catch(e) {
+  }catch(e){
     alert('エクスポートに失敗しました');
   }
-};
-window.changePw = function(){
-  const p1  = document.getElementById('new-pw1').value;
-  const p2  = document.getElementById('new-pw2').value;
-  const msg = document.getElementById('pw-msg');
+}
+
+function changePw(){
+  const p1=document.getElementById('new-pw1').value;
+  const p2=document.getElementById('new-pw2').value;
+  const msg=document.getElementById('pw-msg');
   if(!p1){ msg.textContent='パスワードを入力してください'; msg.style.color='#A32D2D'; return; }
   if(p1!==p2){ msg.textContent='パスワードが一致しません'; msg.style.color='#A32D2D'; return; }
-  localStorage.setItem(ADMIN_PW_KEY, p1);
+  localStorage.setItem(ADMIN_PW_KEY,p1);
   msg.textContent='変更しました'; msg.style.color='#0F6E56';
   document.getElementById('new-pw1').value='';
   document.getElementById('new-pw2').value='';
-};
-
-// =====================
-// 起動時セッション復元
-// =====================
-if(isAdminLoggedIn()){
-  showDeleted = false;
-  window.adminTab('list');
-  showScreen('s-admin');
 }
 
-document.getElementById('login-id').addEventListener('keydown', e => { if(e.key==='Enter') window.loginUser(); });
-document.getElementById('admin-pw').addEventListener('keydown', e => { if(e.key==='Enter') window.loginAdmin(); });
+document.getElementById('login-id').addEventListener('keydown',e=>{ if(e.key==='Enter') loginUser(); });
+document.getElementById('admin-pw').addEventListener('keydown',e=>{ if(e.key==='Enter') loginAdmin(); });
 </script>
 </body>
 </html>
