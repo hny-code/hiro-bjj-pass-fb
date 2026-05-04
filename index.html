@@ -150,6 +150,44 @@ input:focus,select:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,1
 </div>
 </div>
 
+<!-- 広告スクリプト（module外） -->
+<script>
+const ADS = [
+  { img: 'https://hny-code.github.io/hiro-bjj-pass-fb/bnr-foodpage.jpg',  url: 'https://food-page.com' },
+  { img: 'https://hny-code.github.io/hiro-bjj-pass-fb/bnr-kaitorisatei.jpg', url: 'https://kaitorisatei.jp' },
+  { img: 'https://hny-code.github.io/hiro-bjj-pass-fb/bnr-taiyoko.jpg',   url: 'https://food-page.com/taiyoko-chikudenchi/' }
+];
+let adIndex = 0;
+
+function showAd(i){
+  adIndex = i;
+  document.getElementById('ad-img').src = ADS[i].img;
+  document.querySelectorAll('.ad-dot').forEach((d,j) => d.classList.toggle('active', j===i));
+}
+
+window.addEventListener('load', function(){
+  // ドット生成
+  const dots = document.getElementById('ad-dots');
+  ADS.forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'ad-dot' + (i===0?' active':'');
+    d.id = 'ad-dot-'+i;
+    dots.appendChild(d);
+  });
+  showAd(0);
+
+  // クリックで現在の広告のURLを開く
+  document.getElementById('ad-img').addEventListener('click', function(){
+    window.open(ADS[adIndex].url, '_blank');
+  });
+
+  // 10秒ごとに自動切替
+  setInterval(function(){
+    showAd((adIndex+1) % ADS.length);
+  }, 10000);
+});
+</script>
+
 <!-- 広告バナー -->
 <div class="ad-bar" id="ad-bar">
   <img id="ad-img" src="" alt="広告" style="width:100%;height:100%;object-fit:cover;display:block;cursor:pointer;">
@@ -181,38 +219,7 @@ let showDeleted = false;
 // =====================
 // 広告
 // =====================
-const ADS = [
-  { img: 'https://hny-code.github.io/hiro-bjj-pass-fb/bnr-foodpage.jpg',    url: 'https://food-page.com' },
-  { img: 'https://hny-code.github.io/hiro-bjj-pass-fb/bnr-kaitorisatei.jpg', url: 'https://kaitorisatei.jp' },
-  { img: 'https://hny-code.github.io/hiro-bjj-pass-fb/bnr-taiyoko.jpg',   url: 'https://food-page.com/taiyoko-chikudenchi/' }
-];
-let adIndex = 0;
-function initAds(){
-  const dots = document.getElementById('ad-dots');
-  ADS.forEach((_,i) => {
-    const d = document.createElement('div');
-    d.className = 'ad-dot' + (i===0?' active':'');
-    d.id = 'ad-dot-'+i;
-    dots.appendChild(d);
-  });
-  showAd(0);
-}
-function showAd(i){
-  adIndex = i;
-  document.getElementById('ad-img').src = ADS[i].img;
-  document.querySelectorAll('.ad-dot').forEach((d,j) => d.classList.toggle('active', j===i));
-}
-initAds();
 
-// 広告クリックで現在のURLを開く
-document.getElementById('ad-img').addEventListener('click', function(){
-  window.open(ADS[adIndex].url, '_blank');
-});
-
-// 10秒ごとに自動切替
-setInterval(function(){
-  showAd((adIndex+1) % ADS.length);
-}, 10000);
 
 // =====================
 // ユーティリティ
