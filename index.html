@@ -119,6 +119,7 @@ input:focus,select:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,1
     <button class="tab active" id="tab-list" onclick="adminTab('list')">券一覧</button>
     <button class="tab" id="tab-new" onclick="adminTab('new')">新規発行</button>
     <button class="tab" id="tab-pw" onclick="adminTab('pw')">PW変更</button>
+    <button class="tab" id="tab-csv" onclick="adminTab('csv')">書き出し</button>
   </div>
   <div id="admin-list"></div>
   <div id="admin-new" style="display:none">
@@ -137,6 +138,16 @@ input:focus,select:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,1
       <div id="new-err" class="err"></div>
     </div>
   </div>
+  <div id="admin-csv" style="display:none">
+    <div class="card">
+      <p class="sub" style="margin-bottom:12px">全データをCSVファイルとしてダウンロードします。</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="exportCSV(false)">有効な券のみ</button>
+        <button class="btn" onclick="exportCSV(true)">全件（削除済み含む）</button>
+      </div>
+    </div>
+  </div>
+
   <div id="admin-pw" style="display:none">
     <div class="card">
       <label>新しいパスワード</label>
@@ -184,7 +195,7 @@ window.addEventListener('load', function(){
   // 10秒ごとに自動切替
   setInterval(function(){
     showAd((adIndex+1) % ADS.length);
-  }, 5000);
+  }, 10000);
 });
 </script>
 
@@ -383,7 +394,7 @@ window.loginAdmin = function(){
 };
 
 window.adminTab = function(tab){
-  ['list','new','pw'].forEach(t => {
+  ['list','new','pw','csv'].forEach(t => {
     document.getElementById('admin-'+t).style.display = t===tab ? 'block':'none';
     document.getElementById('tab-'+t).classList.toggle('active', t===tab);
   });
@@ -500,6 +511,44 @@ window.issueTicket = async function(){
   }
 };
 
+
+window.exportCSV = async function(includeDeleted){
+  try {
+    const all = await getTickets();
+    const data = includeDeleted ? all : all.filter(t => !isDeleted(t));
+    if(!data.length){ alert('データがありません'); return; }
+
+    const headers = ['会員番号','お名前','券種','使用回数','残り回数','発行日','有効期限','削除','削除日時'];
+    const rows = data.map(t => [
+      padMember(t.member),
+      t.name,
+      t.total + '回券',
+      t.used,
+      Number(t.total) - Number(t.used),
+      dateOnly(t.issued),
+      dateOnly(t.expiry),
+      isDeleted(t) ? '削除済み' : '',
+      t.deletedAt ? dateTime(t.deletedAt) : ''
+    ]);
+
+    const csv = [headers, ...rows]
+      .map(row => row.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(','))
+      .join('\n');
+
+    const bom = '\uFEFF';
+    const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const now = new Date();
+    const filename = 'session-pass-' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '.csv';
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch(e) {
+    alert('エクスポートに失敗しました');
+  }
+};
 window.changePw = function(){
   const p1  = document.getElementById('new-pw1').value;
   const p2  = document.getElementById('new-pw2').value;
