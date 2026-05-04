@@ -151,10 +151,8 @@ input:focus,select:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,1
 </div>
 
 <!-- 広告バナー -->
-<div class="ad-bar" onclick="adTap()">
-  <a id="ad-link" href="#" target="_blank" rel="noopener">
-    <img id="ad-img" src="" alt="広告">
-  </a>
+<div class="ad-bar" id="ad-bar">
+  <img id="ad-img" src="" alt="広告" style="width:100%;height:100%;object-fit:cover;display:block;cursor:pointer;">
 </div>
 <div class="ad-dots" id="ad-dots"></div>
 
@@ -201,14 +199,16 @@ function initAds(){
 }
 function showAd(i){
   adIndex = i;
-  document.getElementById('ad-img').src  = ADS[i].img;
-  document.getElementById('ad-link').href = ADS[i].url;
+  document.getElementById('ad-img').src = ADS[i].img;
   document.querySelectorAll('.ad-dot').forEach((d,j) => d.classList.toggle('active', j===i));
 }
-window.adTap = function(){
-  window.open(ADS[adIndex].url, '_blank');
-  showAd((adIndex+1) % ADS.length);
-};
+// 広告クリック：現在のURLを開いてから次へ
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('ad-img').addEventListener('click', function(){
+    window.open(ADS[adIndex].url, '_blank');
+    showAd((adIndex+1) % ADS.length);
+  });
+});
 initAds();
 
 // =====================
