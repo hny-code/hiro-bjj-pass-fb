@@ -71,7 +71,7 @@ input:focus,select:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,1
 <!-- ログイン -->
 <div id="s-login" class="screen active">
   <div class="logo-block">
-    <div class="logo-main">HIRO BJJ SENDAGI 回数券</div>
+    <div class="logo-main">HIRO BJJ SENDAGI</div>
     <div class="logo-divider"></div>
     <div class="logo-sub">session pass</div>
   </div>
@@ -99,7 +99,7 @@ input:focus,select:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,1
 <div id="s-user" class="screen">
   <div class="top-bar">
     <div>
-      <div style="font-size:15px;font-weight:500;letter-spacing:0.05em">HIRO BJJ SENDAGI 回数券</div>
+      <div style="font-size:15px;font-weight:500;letter-spacing:0.05em">HIRO BJJ SENDAGI</div>
       <div style="font-size:10px;letter-spacing:0.15em;color:#888;text-transform:uppercase;margin-top:2px">session pass</div>
     </div>
     <button class="btn btn-sm" onclick="goLogin()">戻る</button>
@@ -112,7 +112,7 @@ input:focus,select:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,1
 <div id="s-admin" class="screen">
   <div class="top-bar">
     <div>
-      <div style="font-size:15px;font-weight:500;letter-spacing:0.05em">HIRO BJJ SENDAGI 回数券</div>
+      <div style="font-size:15px;font-weight:500;letter-spacing:0.05em">HIRO BJJ SENDAGI</div>
       <div style="font-size:10px;letter-spacing:0.15em;color:#888;text-transform:uppercase;margin-top:2px">管理画面</div>
     </div>
     <button class="btn btn-sm" onclick="logout()">ログアウト</button>
@@ -133,8 +133,8 @@ input:focus,select:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,1
       <input type="text" id="new-name" placeholder="例：山田 太郎">
       <label>券種</label>
       <select id="new-type">
-        <option value="5">5回券（有効期限 2か月）</option>
-        <option value="10">10回券（有効期限 4か月）</option>
+        <option value="5">5回券 14,000円（有効期限 2か月）</option>
+        <option value="10">10回券 27,000円（有効期限 4か月）</option>
       </select>
       <div style="text-align:right"><button class="btn btn-primary" onclick="issueTicket()">発行する</button></div>
       <div id="new-err" class="err"></div>
@@ -187,7 +187,7 @@ window.addEventListener('load', function(){
   document.getElementById('ad-img').addEventListener('click', function(){
     window.open(ADS[adIndex].url, '_blank');
   });
-  setInterval(function(){ showAd((adIndex+1) % ADS.length); }, 5000);
+  setInterval(function(){ showAd((adIndex+1) % ADS.length); }, 10000);
 });
 </script>
 
